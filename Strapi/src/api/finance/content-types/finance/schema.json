@@ -1,0 +1,40 @@
+{
+  "kind": "collectionType",
+  "collectionName": "finances",
+  "info": {
+    "singularName": "finance",
+    "pluralName": "finances",
+    "displayName": "finance"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "date_time": {
+      "type": "datetime",
+      "required": true
+    },
+    "Type": {
+      "type": "enumeration",
+      "enum": [
+        "Income",
+        "Expense"
+      ],
+      "required": true
+    },
+    "Amount": {
+      "type": "decimal"
+    },
+    "Note": {
+      "type": "string",
+      "required": true
+    },
+    "creator": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "finances"
+    }
+  }
+}

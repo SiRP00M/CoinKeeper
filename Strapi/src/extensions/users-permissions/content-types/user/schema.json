@@ -65,6 +65,12 @@
       "target": "plugin::users-permissions.role",
       "inversedBy": "users",
       "configurable": false
+    },
+    "finances": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::finance.finance",
+      "mappedBy": "creator"
     }
   }
 }
