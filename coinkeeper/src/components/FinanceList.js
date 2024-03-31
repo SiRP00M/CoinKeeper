@@ -18,7 +18,7 @@ export default function FinanceList(props) {
       key: 'id',
       title: 'Type',
       dataIndex: 'Type',
-      render: type => type === 'income' ? <Tag color='green'>รายรับ</Tag> : <Tag color='red'>รายจ่าย</Tag>
+      render: Type => Type === 'Income' ? <Tag color='green'>รายรับ</Tag> : <Tag color='red'>รายจ่าย</Tag>
     },
     {
       key: 'id',
@@ -30,10 +30,12 @@ export default function FinanceList(props) {
       title: 'Note',
       dataIndex: 'Note',
     },
-    
+
   ];
 
   return (
     <Table columns={columns} dataSource={props.data} />
   )
 }
+
+

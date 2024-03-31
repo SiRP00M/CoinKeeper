@@ -5,8 +5,6 @@ import { Spin, Divider, Typography } from 'antd';
 import axios from 'axios'
 import conf from '../config/conf';
 
-
-
 export default function TrackerScreen() {
   const [currentAmount, setCurrentAmount] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
@@ -30,11 +28,15 @@ export default function TrackerScreen() {
 
 
   useEffect(() => {
-    setCurrentAmount(transactionData.reduce(
-      (sum, d) => sum = d.type === "income" ? sum + d.Amount : sum - d.Amount
-      , 0))
-  }
-    , [transactionData])
+    setCurrentAmount(transactionData.reduce((sum, d) => {
+        if (d.Type === "Income") {
+            return sum + parseFloat(d.Amount);
+        } else if (d.Type === "Expense") {
+            return sum - parseFloat(d.Amount);
+        }
+        return sum;
+    }, 0));
+}, [transactionData]);
 
   useEffect(() => {
     fetchItems()
@@ -57,4 +59,3 @@ export default function TrackerScreen() {
   );
 
 }
-
