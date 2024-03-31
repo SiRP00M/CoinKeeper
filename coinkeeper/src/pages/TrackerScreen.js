@@ -3,10 +3,9 @@ import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { Spin, Divider, Typography } from 'antd';
 import axios from 'axios'
+import conf from '../config/conf';
 
 
-axios.defaults.baseURL = process.env.REACT_APP_BASE_URL || "http://localhost:1337"
-const URL_TXACTIONS = '/api/finances'
 
 export default function TrackerScreen() {
   const [currentAmount, setCurrentAmount] = useState(0)
@@ -16,7 +15,9 @@ export default function TrackerScreen() {
   const fetchItems = async () => {
     try {
       setIsLoading(true)
-      const response = await axios.get(URL_TXACTIONS)
+      const response = await axios.get( `${conf.apiUrl}/finances`
+        
+        )
       setTransactionData(response.data.data.map(d => ({
         id: d.id,
         key: d.id,
