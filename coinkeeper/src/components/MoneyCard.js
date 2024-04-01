@@ -1,12 +1,17 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import '../App.css'
 import axios from 'axios'
 import conf from '../config/conf';
+import useSessionState from '../config/jwtstorage';
 
 export default function MoneyCard() {
     const [currentAmount, setCurrentAmount] = useState(0)
     const [transactionData, setTransactionData] = useState([])
-
+    const [jwt] = useSessionState(null, 'jwt');
+    const [username, setUsername] = useState('')
+    const navigate = useNavigate();
+    
     const fetchItems = async () => {
         try {
             const response = await axios.get(`${conf.apiUrl}/finances`);
@@ -20,9 +25,28 @@ export default function MoneyCard() {
         }
     }
 
+    const ShowUserName = async () => {
+        try {
+            axios.defaults.headers.common = {
+                Authorization: `Bearer ${jwt}`,
+            };
+            const userResult = await axios.get(
+                `${conf.apiUrl}/users/me?populate=role`
+            );
+
+            setUsername(userResult.data.username);
+        } catch (error) {
+            console.error(error);
+        }
+
+    };
+
     useEffect(() => {
+        if (jwt == null) {
+            navigate("/Login");
+        } else ShowUserName();
         fetchItems();
-    }, []);
+    },);
 
     useEffect(() => {
         setCurrentAmount(transactionData.reduce((sum, d) => {
@@ -40,8 +64,13 @@ export default function MoneyCard() {
             <div className="credit-card">
                 <div className="credit-card-balance">
                     $<span>{currentAmount}</span>
+
+
                 </div>
                 <div className="credit-card-text">Balance</div>
+                <span>
+                    {username}
+                </span>
             </div>
         </div>
     );

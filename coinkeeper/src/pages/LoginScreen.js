@@ -23,7 +23,7 @@ export default function LoginScreen(props) {
       const loginResult = await axios.post(
         `${conf.apiUrl}/auth/local`,
         {
-          identifier: values.username,
+          identifier: values.identifier, 
           password: values.password,
         }
       );
@@ -73,11 +73,10 @@ export default function LoginScreen(props) {
           >
             <Form form={form} onFinish={handleSubmit} >
               <Form.Item
-
-                label="ชื่อผู้ใช้"
-                name="username"
+                label="อีเมลหรือชื่อผู้ใช้"
+                name="identifier"
                 rules={[
-                  { required: true, message: "Please enter your username!" },
+                  { required: true, message: "กรุณากรอกอีเมลหรือชื่อผู้ใช้!" },
                 ]}
               >
                 <Input />
