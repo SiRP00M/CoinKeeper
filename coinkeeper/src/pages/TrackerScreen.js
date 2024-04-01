@@ -1,13 +1,13 @@
-import FinanceList from '../components/FinanceList';
 import moment from 'moment';
-import { useState, useEffect } from 'react';
-import { Dropdown, Menu, Divider, Spin, Button, Typography, Space } from 'antd';
 import axios from 'axios'
+import { useState, useEffect } from 'react';
+import { Dropdown, Menu, Divider, Spin, Button, Space } from 'antd';
 import conf from '../config/conf';
 import AddItem from '../components/AddList';
+import MoneyCard from '../components/MoneyCard';
+import FinanceList from '../components/FinanceList';
 
 export default function TrackerScreen() {
-    const [currentAmount, setCurrentAmount] = useState(0)
     const [isLoading, setIsLoading] = useState(false)
     const [transactionData, setTransactionData] = useState([])
     const [filter, setFilter] = useState(null);
@@ -57,18 +57,6 @@ export default function TrackerScreen() {
         </Menu>
     );
 
-
-    useEffect(() => {
-        setCurrentAmount(transactionData.reduce((sum, d) => {
-            if (d.Type === "Income") {
-                return sum + parseFloat(d.Amount);
-            } else if (d.Type === "Expense") {
-                return sum - parseFloat(d.Amount);
-            }
-            return sum;
-        }, 0));
-    }, [transactionData]);
-
     useEffect(() => {
         fetchItems()
     }, [])
@@ -78,15 +66,14 @@ export default function TrackerScreen() {
             <header className="App-header">
                 <Spin spinning={isLoading}>
                     <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
-                        <Typography.Title>
-                            จำนวนเงินปัจจุบัน {currentAmount} บาท
-                        </Typography.Title>
+                        <MoneyCard></MoneyCard>
                         <Divider>บันทึกรายรับ-รายจ่าย</Divider>
                         <Dropdown overlay={menu} trigger={['click']}>
                             <Button>
                                 เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
                             </Button>
                         </Dropdown>
+
                         <AddItem onItemAdded={addItem} />
                         <FinanceList
                             data={transactionData}
