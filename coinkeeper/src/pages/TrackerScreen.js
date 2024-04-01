@@ -1,49 +1,68 @@
 import moment from 'moment';
 import axios from 'axios'
 import { useState, useEffect } from 'react';
-import { Dropdown, Menu, Divider, Spin, Button, Space } from 'antd';
+import { Dropdown, Menu, Divider, Button, Space } from 'antd';
+import { useNavigate } from "react-router-dom";
 import conf from '../config/conf';
 import AddItem from '../components/AddList';
 import MoneyCard from '../components/MoneyCard';
 import FinanceList from '../components/FinanceList';
+import useSessionState from "../config/jwtstorage";
 
 export default function TrackerScreen() {
-    const [isLoading, setIsLoading] = useState(false)
     const [transactionData, setTransactionData] = useState([])
     const [filter, setFilter] = useState(null);
+    const [jwt] = useSessionState(null, "jwt");
+    const [setUsername] = useState("");
+    const navigate = useNavigate();
 
     const fetchItems = async () => {
         try {
-            setIsLoading(true)
-            const response = await axios.get(`${conf.apiUrl}/finances`
-
-            )
+            const response = await axios.get(`${conf.apiUrl}/finances`);
             setTransactionData(response.data.data.map(d => ({
                 id: d.id,
                 key: d.id,
                 ...d.attributes
-            })))
+            })));
         } catch (err) {
-            console.log(err)
-        } finally { setIsLoading(false) }
-    }
+            console.log(err);
+        }
+    };
 
     const addItem = async (item) => {
         try {
-            setIsLoading(true)
-            const params = { ...item, date_time: moment() }
-            const response = await axios.post(`${conf.apiUrl}/finances`, { data: params })
-            const { id, attributes } = response.data.data
+            const params = { ...item, date_time: moment() };
+            const response = await axios.post(`${conf.apiUrl}/finances`, { data: params });
+            const { id, attributes } = response.data.data;
             setTransactionData([
                 ...transactionData,
                 { id: id, key: id, ...attributes }
-            ])
+            ]);
         } catch (err) {
-            console.log(err)
-        } finally {
-            setIsLoading(false)
+            console.log(err);
         }
-    }
+    };
+
+    const roleChecker = async () => {
+        try {
+            axios.defaults.headers.common = {
+                Authorization: `Bearer ${jwt}`,
+            };
+            const userResult = await axios.get(
+                `${conf.apiUrl}/users/me?populate=role`
+            );
+
+            setUsername(userResult.data.username);
+
+            if (userResult.data.role && userResult.data.role.name === "Authenticated") {
+                navigate("/TrackerScreen");
+            } else {
+                navigate("/Login");
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     const handleMenuClick = (e) => {
         setFilter(e.key === 'all' ? null : e.key);
@@ -58,13 +77,16 @@ export default function TrackerScreen() {
     );
 
     useEffect(() => {
-        fetchItems()
-    }, [])
+        if (jwt == null) {
+            navigate("/Login");
+        } else roleChecker();
+        fetchItems();
+    }, );
 
     return (
         <div className="App">
             <header className="App-header">
-                <Spin spinning={isLoading}>
+               
                     <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
                         <MoneyCard></MoneyCard>
                         <Divider>บันทึกรายรับ-รายจ่าย</Divider>
@@ -80,7 +102,7 @@ export default function TrackerScreen() {
                             filter={filter}
                         />
                     </Space>
-                </Spin>
+               
             </header>
         </div>
     );

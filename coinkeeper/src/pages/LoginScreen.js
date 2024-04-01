@@ -1,58 +1,124 @@
-import { useState } from 'react';
-import { Button, Form, Input, Alert } from 'antd';
+import { useState, useEffect } from 'react';
+import { Form, Input, Button, Modal, Row, Col, Card } from "antd";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import useSessionState from "../config/jwtstorage";
 import conf from '../config/conf';
 
 
 export default function LoginScreen(props) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [errMsg, setErrMsg] = useState(null);
-  const Navigate = useNavigate();
+  const [jwt, setjwt] = useSessionState(null, "jwt");
+  const [submitEnabled, setSubmitEnabled] = useState(true);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [form] = Form.useForm();
+  const navigate = useNavigate();
 
-  const handleLogin = async (formData) => {
+  const handleSubmit = async (values) => {
+    axios.defaults.headers.common = {
+      Authorization: ``,
+    };
+    setSubmitEnabled(false);
     try {
-      setIsLoading(true);
-      setErrMsg(null);
-      const response = await axios.post(`${conf.Url}/api/auth/local`, { ...formData });
-      const token = response.data.jwt;
-      axios.defaults.headers.common = { 'Authorization': `bearer ${token}` };
-      setIsLoading(false);
-      Navigate('/TrackerScreen');
-    } catch (err) {
-      console.log(err);
-      setIsLoading(false);
-      setErrMsg(err.message);
+      const loginResult = await axios.post(
+        `${conf.apiUrl}/auth/local`,
+        {
+          identifier: values.username,
+          password: values.password,
+        }
+      );
+
+      const jwtToken = loginResult.data.jwt;
+      setjwt(jwtToken);
+      axios.defaults.headers.common = {
+        Authorization: `Bearer ${loginResult.data.jwt}`,
+      };
+      const userResult = await axios.get(
+        `${conf.apiUrl}/users/me?populate=role`
+      );
+
+      if (userResult.data.role && userResult.data.role.name === "Authenticated") {
+        navigate("/TrackerScreen");
+      } else {
+        navigate("/Login");
+      }
+    } catch (error) {
+      console.error(error);
+      setErrorMessage("Wrong username or password");
+      setShowErrorModal(true);
+    } finally {
+      setSubmitEnabled(true);
     }
   };
-  
+  const handleCloseErrorModal = () => {
+    setShowErrorModal(false);
+  };
+
+
+  useEffect(() => {
+    if (jwt == null) { navigate("/login") };
+  },);
+
+
+
   return (
-    <Form onFinish={handleLogin} autoComplete="off">
-      {errMsg && (
-        <Form.Item>
-          <Alert message={errMsg} type="error" />
-        </Form.Item>
-      )}
+    <div style={{}}>
 
-      <Form.Item
-        label="Username"
-        name="identifier"
-        rules={[{ required: true }]}>
-        <Input />
-      </Form.Item>
+      <Row justify="center" align="middle">
+        <Col >
+          <Card
+            title="เข้าสู่ระบบ"
+            bordered={true}
+            style={{ fontFamily: 'Kanit', width: "100%", textAlign: "center" }}
+          >
+            <Form form={form} onFinish={handleSubmit} >
+              <Form.Item
 
-      <Form.Item
-        label="Password"
-        name="password"
-        rules={[{ required: true }]}>
-        <Input.Password />
-      </Form.Item>
+                label="ชื่อผู้ใช้"
+                name="username"
+                rules={[
+                  { required: true, message: "Please enter your username!" },
+                ]}
+              >
+                <Input />
+              </Form.Item>
 
-      <Form.Item>
-        <Button type="primary" htmlType="submit" loading={isLoading}>
-          Submit
-        </Button>
-      </Form.Item>
-    </Form>
+              <Form.Item
+                label="รหัสผ่าน"
+                name="password"
+                rules={[
+                  { required: true, message: "Please enter your password!" },
+                ]}
+              >
+                <Input.Password />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  disabled={!submitEnabled}
+                  style={{ fontFamily: 'Kanit' }}
+                >
+                  เข้าสู่ระบบ
+                </Button>
+              </Form.Item>
+            </Form>
+          </Card>
+        </Col>
+
+        <Modal
+          title={<span >Warning</span>}
+          visible={showErrorModal}
+          onCancel={handleCloseErrorModal}
+          footer={null}
+        >
+          <p>{errorMessage}</p>
+          <Button type="primary" onClick={handleCloseErrorModal}>
+            Close
+          </Button>
+        </Modal>
+      </Row>
+    </div>
   );
-}
+};
