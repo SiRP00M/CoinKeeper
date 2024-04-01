@@ -1,16 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
 import TrackerScreen from './pages/TrackerScreen';
+import LoginScreen from './pages/LoginScreen';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const router = createBrowserRouter([
+  {
+    path: "/Login",
+    element: <LoginScreen />,
+  },
+  {
+    path: "/TrackerScreen",
+    element: <TrackerScreen />,
+  },
+]);
+
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <TrackerScreen />
+    <RouterProvider router={router} />
   </React.StrictMode>
 );
 
-
 reportWebVitals();
+
