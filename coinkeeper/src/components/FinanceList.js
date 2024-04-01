@@ -1,6 +1,5 @@
-import { Space, Table, Tag, Button } from 'antd';
+import { Table, Tag} from 'antd';
 import moment from 'moment';
-
 
 export default function FinanceList({ data, filter }) {
     const filteredData = filter ? data.filter(item => item.Type === filter) : data;

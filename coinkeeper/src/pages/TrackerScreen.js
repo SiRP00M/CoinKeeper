@@ -1,9 +1,10 @@
 import FinanceList from '../components/FinanceList';
 import moment from 'moment';
 import { useState, useEffect } from 'react';
-import { Dropdown, Menu, Divider, Spin,Button,Typography } from 'antd';
+import { Dropdown, Menu, Divider, Spin, Button, Typography, Space } from 'antd';
 import axios from 'axios'
 import conf from '../config/conf';
+import AddItem from '../components/AddList';
 
 export default function TrackerScreen() {
     const [currentAmount, setCurrentAmount] = useState(0)
@@ -25,6 +26,23 @@ export default function TrackerScreen() {
         } catch (err) {
             console.log(err)
         } finally { setIsLoading(false) }
+    }
+
+    const addItem = async (item) => {
+        try {
+            setIsLoading(true)
+            const params = { ...item, date_time: moment() }
+            const response = await axios.post(`${conf.apiUrl}/finances`, { data: params })
+            const { id, attributes } = response.data.data
+            setTransactionData([
+                ...transactionData,
+                { id: id, key: id, ...attributes }
+            ])
+        } catch (err) {
+            console.log(err)
+        } finally {
+            setIsLoading(false)
+        }
     }
 
     const handleMenuClick = (e) => {
@@ -59,19 +77,22 @@ export default function TrackerScreen() {
         <div className="App">
             <header className="App-header">
                 <Spin spinning={isLoading}>
-                    <Typography.Title>
-                        จำนวนเงินปัจจุบัน {currentAmount} บาท
-                    </Typography.Title>
-                    <Divider>บันทึกรายรับ-รายจ่าย</Divider>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <Button>
-                            เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
-                        </Button>
-                    </Dropdown>
-                    <FinanceList
-                        data={transactionData}
-                        filter={filter}
-                    />
+                    <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
+                        <Typography.Title>
+                            จำนวนเงินปัจจุบัน {currentAmount} บาท
+                        </Typography.Title>
+                        <Divider>บันทึกรายรับ-รายจ่าย</Divider>
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <Button>
+                                เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
+                            </Button>
+                        </Dropdown>
+                        <AddItem onItemAdded={addItem} />
+                        <FinanceList
+                            data={transactionData}
+                            filter={filter}
+                        />
+                    </Space>
                 </Spin>
             </header>
         </div>
