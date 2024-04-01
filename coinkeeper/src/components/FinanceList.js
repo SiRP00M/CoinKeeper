@@ -1,44 +1,44 @@
-import { Table, Tag} from 'antd';
+import { Table, Tag } from 'antd';
 import moment from 'moment';
+import 'moment/locale/th';
 
 export default function FinanceList({ data, filter }) {
     const filteredData = filter ? data.filter(item => item.Type === filter) : data;
 
+    moment.locale('th');
+    
+    const sortedData = filteredData.sort((a, b) => {
+        return moment(b.date_time).diff(moment(a.date_time));
+    });
+
     const columns = [
         {
-            key: 'id',
+            key: 'date',
             title: 'Date',
             dataIndex: 'date_time',
-            render: date => moment(date).format('DD.MM.YYYY')
-        },
-        {
-            key: 'id',
-            title: 'Time',
-            dataIndex: 'date_time',
-            render: time => moment(time).format('HH:mm')
-        },
-        {
-            key: 'id',
-            title: 'Type',
-            dataIndex: 'Type',
-            render: Type => Type === 'Income' ? <Tag color='green'>รายรับ</Tag> : <Tag color='red'>รายจ่าย</Tag>
+            render: date => moment(date).format(' DD MMM YYYY - HH:mm'),
         },
         {
             key: 'id',
             title: 'Amount',
             dataIndex: 'Amount',
+            render: (amount, record) => {
+                const isIncome = record.Type === 'Income';
+                const formattedAmount = isIncome ? `+${amount}` : `-${amount}`;
+                const color = isIncome ? 'green' : 'red';
+                return <Tag color={color}>{formattedAmount}</Tag>;
+            }
         },
         {
             key: 'id',
             title: 'Note',
             dataIndex: 'Note',
         },
-
     ];
 
     return (
-        <Table columns={columns} dataSource={filteredData} />
+        <>
+            <Table columns={columns} dataSource={sortedData} pagination={false}/>
+        </>
     )
 }
-
-
