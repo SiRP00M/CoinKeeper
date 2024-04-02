@@ -13,7 +13,7 @@ export default function TrackerScreen() {
     const [transactionData, setTransactionData] = useState([])
     const [currentAmount, setCurrentAmount] = useState(0);
     const [filter, setFilter] = useState(null);
-    const [jwt] = useSessionState(null, "jwt");
+    const [jwt, setJwt] = useSessionState(null, "jwt");
     const [username, setUsername] = useState("");
     const navigate = useNavigate();
 
@@ -87,6 +87,17 @@ export default function TrackerScreen() {
         </Menu>
     );
 
+    const handleLogout = () => {
+        setJwt(null);
+
+        if (jwt == null) {
+            navigate("/login");
+        } else {
+            navigate("/TrackerScreen");
+        }
+    };
+
+
     useEffect(() => {
         if (jwt == null) {
             navigate("/login");
@@ -95,6 +106,7 @@ export default function TrackerScreen() {
             fetchItems();
         }
     }, [jwt]);
+
 
     return (
         <div className="App">
@@ -113,6 +125,7 @@ export default function TrackerScreen() {
                         data={transactionData}
                         filter={filter}
                     />
+                    <Button onClick={() => handleLogout()}>Log Out</Button>
                 </Space>
             </header>
         </div>

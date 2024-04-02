@@ -7,6 +7,7 @@ import conf from '../config/conf';
 
 export default function LoginScreen(props) {
   const [jwt, setjwt] = useSessionState(null, "jwt");
+  
   const [submitEnabled, setSubmitEnabled] = useState(true);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -55,8 +56,10 @@ export default function LoginScreen(props) {
   };
 
   useEffect(() => {
-    if (jwt == null) { navigate("/login") };
-  },);
+    if (jwt) {
+        navigate("/TrackerScreen");
+    }
+}, [jwt, navigate]);
 
   return (
     <div style={{}}>
