@@ -54,8 +54,7 @@ export default function TrackerScreen() {
 
             setUsername(userResult.data.username);
 
-            if (userResult.data.role && userResult.data.role.name === "Authenticated") {
-                navigate("/TrackerScreen");
+            if (userResult.data.role && userResult.data.role.name === "Member") {
             } else {
                 navigate("/Login");
             }
@@ -78,33 +77,32 @@ export default function TrackerScreen() {
 
     useEffect(() => {
         if (jwt == null) {
-            navigate("/Login");
-        } else roleChecker();
-        fetchItems();
-    }, );
-
-    return (
+            navigate("/login");
+        } else {
+            roleChecker();
+            fetchItems(); 
+        }
+    }, [jwt]); 
+    
+      return (
         <div className="App">
             <header className="App-header">
-               
-                    <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
-                        <MoneyCard></MoneyCard>
-                        <Divider>บันทึกรายรับ-รายจ่าย</Divider>
-                        <Dropdown overlay={menu} trigger={['click']}>
-                            <Button>
-                                เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
-                            </Button>
-                        </Dropdown>
+                <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
+                    <MoneyCard ></MoneyCard>
+                    <Divider>บันทึกรายรับ-รายจ่าย</Divider>
+                    <Dropdown overlay={menu} trigger={['click']}>
+                        <Button>
+                            เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
+                        </Button>
+                    </Dropdown>
 
-                        <AddItem onItemAdded={addItem} />
-                        <FinanceList
-                            data={transactionData}
-                            filter={filter}
-                        />
-                    </Space>
-               
+                    <AddItem onItemAdded={addItem} />
+                    <FinanceList
+                        data={transactionData}
+                        filter={filter}
+                    />
+                </Space>
             </header>
         </div>
     );
-
 }

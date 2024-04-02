@@ -12,41 +12,42 @@ export default function MoneyCard() {
     const [username, setUsername] = useState('')
     const navigate = useNavigate();
     
-    const fetchItems = async () => {
-        try {
-            const response = await axios.get(`${conf.apiUrl}/finances`);
-            setTransactionData(response.data.data.map(d => ({
-                id: d.id,
-                key: d.id,
-                ...d.attributes
-            })));
-        } catch (err) {
-            console.log(err);
-        }
-    }
-
-    const ShowUserName = async () => {
-        try {
-            axios.defaults.headers.common = {
-                Authorization: `Bearer ${jwt}`,
-            };
-            const userResult = await axios.get(
-                `${conf.apiUrl}/users/me?populate=role`
-            );
-
-            setUsername(userResult.data.username);
-        } catch (error) {
-            console.error(error);
-        }
-
-    };
-
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${conf.apiUrl}/finances`);
+                setTransactionData(response.data.data.map(d => ({
+                    id: d.id,
+                    key: d.id,
+                    ...d.attributes
+                })));
+            } catch (err) {
+                console.log(err);
+            }
+        };
+    
+        const fetchUserData = async () => {
+            try {
+                axios.defaults.headers.common = {
+                    Authorization: `Bearer ${jwt}`,
+                };
+                const userResult = await axios.get(
+                    `${conf.apiUrl}/users/me?populate=role`
+                );
+    
+                setUsername(userResult.data.username);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+    
         if (jwt == null) {
             navigate("/Login");
-        } else ShowUserName();
-        fetchItems();
-    },);
+        } else {
+            fetchUserData();
+            fetchData();
+        }
+    }, [jwt, navigate]);
 
     useEffect(() => {
         setCurrentAmount(transactionData.reduce((sum, d) => {

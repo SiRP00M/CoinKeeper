@@ -37,7 +37,7 @@ export default function LoginScreen(props) {
         `${conf.apiUrl}/users/me?populate=role`
       );
 
-      if (userResult.data.role && userResult.data.role.name === "Authenticated") {
+      if (userResult.data.role && userResult.data.role.name === "Member") {
         navigate("/TrackerScreen");
       } else {
         navigate("/Login");
@@ -58,8 +58,6 @@ export default function LoginScreen(props) {
   useEffect(() => {
     if (jwt == null) { navigate("/login") };
   },);
-
-
 
   return (
     <div style={{}}>
