@@ -11,24 +11,36 @@ import useSessionState from "../config/jwtstorage";
 
 export default function TrackerScreen() {
     const [transactionData, setTransactionData] = useState([])
+    const [currentAmount, setCurrentAmount] = useState(0);
     const [filter, setFilter] = useState(null);
     const [jwt] = useSessionState(null, "jwt");
-    const [setUsername] = useState("");
+    const [username, setUsername] = useState("");
     const navigate = useNavigate();
 
     const fetchItems = async () => {
         try {
             const response = await axios.get(`${conf.apiUrl}/finances`);
-            setTransactionData(response.data.data.map(d => ({
+            const data = response.data.data.map(d => ({
                 id: d.id,
                 key: d.id,
                 ...d.attributes
-            })));
+            }));
+            setTransactionData(data);
+
+            const amount = data.reduce((sum, d) => {
+                if (d.Type === "Income") {
+                    return sum + parseFloat(d.Amount);
+                } else if (d.Type === "Expense") {
+                    return sum - parseFloat(d.Amount);
+                }
+                return sum;
+            }, 0);
+            setCurrentAmount(amount);
+
         } catch (err) {
             console.log(err);
         }
     };
-
     const addItem = async (item) => {
         try {
             const params = { ...item, date_time: moment() };
@@ -80,15 +92,15 @@ export default function TrackerScreen() {
             navigate("/login");
         } else {
             roleChecker();
-            fetchItems(); 
+            fetchItems();
         }
-    }, [jwt]); 
-    
-      return (
+    }, [jwt]);
+
+    return (
         <div className="App">
             <header className="App-header">
                 <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
-                    <MoneyCard ></MoneyCard>
+                    <MoneyCard currentAmount={currentAmount} username={username} />
                     <Divider>บันทึกรายรับ-รายจ่าย</Divider>
                     <Dropdown overlay={menu} trigger={['click']}>
                         <Button>

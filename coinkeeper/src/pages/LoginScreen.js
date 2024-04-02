@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import useSessionState from "../config/jwtstorage";
 import conf from '../config/conf';
 
-
 export default function LoginScreen(props) {
   const [jwt, setjwt] = useSessionState(null, "jwt");
   const [submitEnabled, setSubmitEnabled] = useState(true);
@@ -23,7 +22,7 @@ export default function LoginScreen(props) {
       const loginResult = await axios.post(
         `${conf.apiUrl}/auth/local`,
         {
-          identifier: values.identifier, 
+          identifier: values.identifier,
           password: values.password,
         }
       );
@@ -50,10 +49,10 @@ export default function LoginScreen(props) {
       setSubmitEnabled(true);
     }
   };
+
   const handleCloseErrorModal = () => {
     setShowErrorModal(false);
   };
-
 
   useEffect(() => {
     if (jwt == null) { navigate("/login") };
