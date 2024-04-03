@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 .App-header {
   min-height: 100vh;
   display: flex;
@@ -9,34 +5,24 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-  
+
 }
 
-.credit-card {
-  display: flex;
-  width: 300px;
-  height: 150px;
-  background-color: black;
-  color: white;
+.Detail {
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+
+}
+
+.Tracker{
+  margin-top: 200px;
   justify-content: center;
   align-items: center;
-  border-radius: 10px;
-}
-.credit-card-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 10vh; 
-}
-
-.credit-card-balance {
-  font-size: 32px;
-  font-weight: bold;
-}
-
-.credit-card-text {
-  font-size: 18px;
-  margin-top: 10px;
+  flex-direction: column;
+  
 }

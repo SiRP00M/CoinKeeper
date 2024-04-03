@@ -2,11 +2,12 @@ import { Table, Tag } from 'antd';
 import moment from 'moment';
 import 'moment/locale/th';
 
+
 export default function FinanceList({ data, filter }) {
     const filteredData = filter ? data.filter(item => item.Type === filter) : data;
 
     moment.locale('th');
-    
+
     const sortedData = filteredData.sort((a, b) => {
         return moment(b.date_time).diff(moment(a.date_time));
     });
@@ -31,6 +32,11 @@ export default function FinanceList({ data, filter }) {
         },
         {
             key: 'id',
+            title: 'type',
+            dataIndex: 'Type'
+        },
+        {
+            key: 'id',
             title: 'Note',
             dataIndex: 'Note',
         },
@@ -38,7 +44,9 @@ export default function FinanceList({ data, filter }) {
 
     return (
         <>
-            <Table columns={columns} dataSource={sortedData} pagination={false}/>
+            <div className='List-fine'>
+                <Table columns={columns} dataSource={sortedData} pagination={false} />
+            </div>
         </>
     )
 }

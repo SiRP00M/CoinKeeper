@@ -8,6 +8,7 @@ import AddItem from '../components/AddList';
 import MoneyCard from '../components/MoneyCard';
 import FinanceList from '../components/FinanceList';
 import useSessionState from "../config/jwtstorage";
+import '../App.css'
 
 export default function TrackerScreen() {
     const [transactionData, setTransactionData] = useState([])
@@ -15,22 +16,23 @@ export default function TrackerScreen() {
     const [filter, setFilter] = useState(null);
     const [jwt, setJwt] = useSessionState(null, "jwt");
     const [username, setUsername] = useState("");
+    const [fullname, setFullname] = useState("");
     const navigate = useNavigate();
 
     const fetchItems = async () => {
         try {
             const responseUser = await axios.get(`${conf.apiUrl}/users/me`);
             const userId = responseUser.data.id;
-    
+
             const response = await axios.get(`${conf.apiUrl}/finances?populate=creator&filters[creator][id]=${userId}`);
             const data = response.data.data.map(d => ({
                 id: d.id,
                 key: d.id,
                 ...d.attributes
-                
+
             }));
             setTransactionData(data);
-    
+
             const amount = data.reduce((sum, d) => {
                 if (d.Type === "Income") {
                     return sum + parseFloat(d.Amount);
@@ -41,28 +43,28 @@ export default function TrackerScreen() {
             }, 0);
             setCurrentAmount(amount);
             console.log(response)
-    
+
         } catch (err) {
             console.log(err);
         }
     };
 
-   const addItem = async (item) => {
-    try {
-        const responseUser = await axios.get(`${conf.apiUrl}/users/me`);
-        const userId = responseUser.data.id;
+    const addItem = async (item) => {
+        try {
+            const responseUser = await axios.get(`${conf.apiUrl}/users/me`);
+            const userId = responseUser.data.id;
 
-        const params = { ...item, date_time: moment(), creator: userId };
-        const response = await axios.post(`${conf.apiUrl}/finances`, { data: params });
-        const { id, attributes } = response.data.data;
-        setTransactionData([
-            ...transactionData,
-            { id: id, key: id, ...attributes }
-        ]);
-    } catch (err) {
-        console.log(err);
-    }
-};
+            const params = { ...item, date_time: moment(), creator: userId };
+            const response = await axios.post(`${conf.apiUrl}/finances`, { data: params });
+            const { id, attributes } = response.data.data;
+            setTransactionData([
+                ...transactionData,
+                { id: id, key: id, ...attributes }
+            ]);
+        } catch (err) {
+            console.log(err);
+        }
+    };
 
     const roleChecker = async () => {
         try {
@@ -74,6 +76,7 @@ export default function TrackerScreen() {
             );
 
             setUsername(userResult.data.username);
+            setFullname(userResult.data.fullname);
 
             if (userResult.data.role && userResult.data.role.name === "Member") {
             } else {
@@ -118,25 +121,28 @@ export default function TrackerScreen() {
 
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <Space direction="vertical" size="middle" style={{ display: 'flex', }}>
-                    <MoneyCard currentAmount={currentAmount} username={username} />
-                    <Divider>บันทึกรายรับ-รายจ่าย</Divider>
-                    <Dropdown overlay={menu} trigger={['click']}>
-                        <Button>
-                            เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
-                        </Button>
-                    </Dropdown>
+        <div className='App'>
+        <div className='Tracker'>
+            <MoneyCard currentAmount={currentAmount} username={fullname} />
+            </div>
+        <header className="Detail">
+              
 
-                    <AddItem onItemAdded={addItem} />
-                    <FinanceList
-                        data={transactionData}
-                        filter={filter}
-                    />
-                    <Button onClick={() => handleLogout()}>Log Out</Button>
-                </Space>
+                <Divider>บันทึกรายรับ-รายจ่าย</Divider>
+                <Dropdown overlay={menu} trigger={['click']}>
+                    <Button>
+                        เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
+                    </Button>
+                </Dropdown>
+
+                <AddItem onItemAdded={addItem} />
+                <FinanceList
+                    data={transactionData}
+                    filter={filter}
+                />
+                <Button onClick={() => handleLogout()}>Log Out</Button>
             </header>
+      
         </div>
     );
 }
