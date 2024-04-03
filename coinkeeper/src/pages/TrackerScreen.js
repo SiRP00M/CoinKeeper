@@ -46,20 +46,23 @@ export default function TrackerScreen() {
             console.log(err);
         }
     };
-    
-    const addItem = async (item) => {
-        try {
-            const params = { ...item, date_time: moment() };
-            const response = await axios.post(`${conf.apiUrl}/finances`, { data: params });
-            const { id, attributes } = response.data.data;
-            setTransactionData([
-                ...transactionData,
-                { id: id, key: id, ...attributes }
-            ]);
-        } catch (err) {
-            console.log(err);
-        }
-    };
+
+   const addItem = async (item) => {
+    try {
+        const responseUser = await axios.get(`${conf.apiUrl}/users/me`);
+        const userId = responseUser.data.id;
+
+        const params = { ...item, date_time: moment(), creator: userId };
+        const response = await axios.post(`${conf.apiUrl}/finances`, { data: params });
+        const { id, attributes } = response.data.data;
+        setTransactionData([
+            ...transactionData,
+            { id: id, key: id, ...attributes }
+        ]);
+    } catch (err) {
+        console.log(err);
+    }
+};
 
     const roleChecker = async () => {
         try {
