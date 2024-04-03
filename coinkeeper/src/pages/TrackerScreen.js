@@ -8,11 +8,15 @@ import AddItem from '../components/AddList';
 import MoneyCard from '../components/MoneyCard';
 import FinanceList from '../components/FinanceList';
 import useSessionState from "../config/jwtstorage";
+import YourMoney from '../components/YourMoney';
 import '../App.css'
+
 
 export default function TrackerScreen() {
     const [transactionData, setTransactionData] = useState([])
     const [currentAmount, setCurrentAmount] = useState(0);
+    const [totalIncome, setTotalIncome] = useState(0);
+    const [totalExpense, setTotalExpense] = useState(0);
     const [filter, setFilter] = useState(null);
     const [jwt, setJwt] = useSessionState(null, "jwt");
     const [username, setUsername] = useState("");
@@ -32,6 +36,20 @@ export default function TrackerScreen() {
 
             }));
             setTransactionData(data);
+
+            const sumTransactionsByType = (transactions, type) => {
+                return transactions.reduce((sum, transaction) => {
+                    if (transaction.Type === type) {
+                        return sum + parseFloat(transaction.Amount);
+                    } else {
+                        return sum;
+                    }
+                }, 0);
+            };
+            const totalIncome = sumTransactionsByType(data, "Income");
+            const totalExpense = sumTransactionsByType(data, "Expense");
+            setTotalIncome(totalIncome);
+            setTotalExpense(totalExpense);       
 
             const amount = data.reduce((sum, d) => {
                 if (d.Type === "Income") {
@@ -122,12 +140,14 @@ export default function TrackerScreen() {
 
     return (
         <div className='App'>
-        <div className='Tracker'>
-            <MoneyCard currentAmount={currentAmount} username={fullname} />
+            <div className='Tracker'>
+                <MoneyCard currentAmount={currentAmount} username={fullname} />
             </div>
-        <header className="Detail">
-              
-
+            <header className="Detail">
+                <YourMoney
+                    totalIncome={totalIncome}
+                    totalExpense={totalExpense}
+                />
                 <Divider>บันทึกรายรับ-รายจ่าย</Divider>
                 <Dropdown overlay={menu} trigger={['click']}>
                     <Button>
@@ -142,7 +162,7 @@ export default function TrackerScreen() {
                 />
                 <Button onClick={() => handleLogout()}>Log Out</Button>
             </header>
-      
+
         </div>
     );
 }
