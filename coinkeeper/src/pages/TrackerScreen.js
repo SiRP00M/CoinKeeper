@@ -19,14 +19,18 @@ export default function TrackerScreen() {
 
     const fetchItems = async () => {
         try {
-            const response = await axios.get(`${conf.apiUrl}/finances`);
+            const responseUser = await axios.get(`${conf.apiUrl}/users/me`);
+            const userId = responseUser.data.id;
+    
+            const response = await axios.get(`${conf.apiUrl}/finances?populate=creator&filters[creator][id]=${userId}`);
             const data = response.data.data.map(d => ({
                 id: d.id,
                 key: d.id,
                 ...d.attributes
+                
             }));
             setTransactionData(data);
-
+    
             const amount = data.reduce((sum, d) => {
                 if (d.Type === "Income") {
                     return sum + parseFloat(d.Amount);
@@ -36,11 +40,13 @@ export default function TrackerScreen() {
                 return sum;
             }, 0);
             setCurrentAmount(amount);
-
+            console.log(response)
+    
         } catch (err) {
             console.log(err);
         }
     };
+    
     const addItem = async (item) => {
         try {
             const params = { ...item, date_time: moment() };
