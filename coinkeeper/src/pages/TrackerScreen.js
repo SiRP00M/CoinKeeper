@@ -1,7 +1,7 @@
 import moment from 'moment';
 import axios from 'axios'
 import { useState, useEffect } from 'react';
-import { Dropdown, Menu, Divider, Button, Layout} from 'antd';
+import { Dropdown, Menu, Divider, Button, Layout } from 'antd';
 import { useNavigate } from "react-router-dom";
 import conf from '../config/conf';
 import AddItem from '../components/AddList';
@@ -9,7 +9,7 @@ import MoneyCard from '../components/MoneyCard';
 import FinanceList from '../components/FinanceList';
 import useSessionState from "../config/jwtstorage";
 import YourMoney from '../components/YourMoney';
-import AppHeader from '../components/AppHeader'; 
+import AppHeader from '../components/AppHeader';
 import '../App.css'
 const { Content, Footer } = Layout;
 
@@ -141,37 +141,40 @@ export default function TrackerScreen() {
 
     return (
         <Layout className="layout">
-            <AppHeader handleLogout={handleLogout} /> {/* เรียกใช้งาน AppHeader */}
+            <AppHeader handleLogout={handleLogout} /> 
             <Content style={{ padding: '0 50px' }}>
-        
-        <div className='App'>
-            <div className='Tracker'>
-                <MoneyCard currentAmount={currentAmount} username={fullname} />
-            </div>
-            <div className='Stat'>
-                    <YourMoney
-                        totalIncome={totalIncome}
-                        totalExpense={totalExpense}
-                    />
+
+                <div className='App'>
+                    <div className='Tracker'>
+                        <MoneyCard currentAmount={currentAmount} username={fullname} />
+                    </div>
+                    <div className='Stat'>
+                        <YourMoney
+                            totalIncome={totalIncome}
+                            totalExpense={totalExpense}
+                        />
+                    </div>
+
+                    <div className="Detail">
+                        <Divider>บันทึกรายรับ-รายจ่าย</Divider>
+                        <Dropdown overlay={menu} trigger={['click']}>
+                            <Button>
+                                เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
+                            </Button>
+                        </Dropdown>
+
+                        <AddItem onItemAdded={addItem} />
+                        <FinanceList
+                            data={transactionData}
+                            filter={filter}
+                        />
+                    </div>
                 </div>
-
-            <div className="Detail">
-                <Divider>บันทึกรายรับ-รายจ่าย</Divider>
-                <Dropdown overlay={menu} trigger={['click']}>
-                    <Button>
-                        เลือกประเภท: {filter ? (filter === 'Income' ? 'รายรับ' : 'รายจ่าย') : 'ทั้งหมด'}
-                    </Button>
-                </Dropdown>
-
-                <AddItem onItemAdded={addItem} />
-                <FinanceList
-                    data={transactionData}
-                    filter={filter}
-                />
-                <Button onClick={() => handleLogout()}>Log Out</Button>
-            </div>
-        </div>
-        </Content>
+            </Content>
+            <Footer className='FooterApp'>
+                <span className='logo'>
+                    <img src='https://static.vecteezy.com/system/resources/previews/027/517/677/original/pixel-art-red-chinese-gold-coin-png.png' alt="logo" />
+                </span>Coinkeeper</Footer>
         </Layout>
     );
 }

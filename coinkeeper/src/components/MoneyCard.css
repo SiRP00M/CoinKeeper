@@ -5,7 +5,6 @@
 *{
     margin: 0;
     box-sizing: border-box;
-    
 }
 
 .List-fine {
@@ -59,10 +58,6 @@ h6{
     font-size: 15px;
 }
 
-.card-detail {
-    margin-top: 20px; 
-}
-
 .card-font .chip {
     width: 48px;
  
@@ -84,7 +79,7 @@ h6{
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.926);
     backdrop-filter: blur(100px); 
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin: 0 10px; 
+    
    
 }
 .Total-Box .Income{
@@ -92,6 +87,7 @@ h6{
     padding-top: 30px;
     font-size: 15px;
     font-family: 'Public Pixel', sans-serif;
+    
 }
 .Total-Box .Expense{
     color: red;
@@ -106,6 +102,6 @@ h6{
 }
 .YourMoney {
     display: flex;
-    padding: 0 20px; 
+    gap: 24px;
 }
 

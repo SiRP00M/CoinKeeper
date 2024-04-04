@@ -1,4 +1,4 @@
-@import url('https://fonts.cdnfonts.com/css/public-pixel');
+
 
 .App {
   background: #F9F6EE;
@@ -22,13 +22,13 @@
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
-
+  margin-bottom: 30px;
 }
 
 .Tracker{
   padding-top: 80px;
   justify-content: center;
-  padding-left: 70px;
+  padding-left: 50px;
   flex-direction: column;
   
 }
@@ -52,4 +52,19 @@
 
 .right-menu {
   margin-left: auto; 
+}
+
+.FooterApp {
+  display: flex;
+  justify-content: space-between;
+  background: #000000;
+  color: #F9F6EE;
+  font-family: 'Lilliput Steps', sans-serif;
+}
+
+.FooterApp .logo img {
+  width: 44px;
+  display: flex;
+  align-items: center;
+
 }
