@@ -1,7 +1,7 @@
 import moment from 'moment';
 import axios from 'axios'
 import { useState, useEffect } from 'react';
-import { Dropdown, Menu, Divider, Button, Space } from 'antd';
+import { Dropdown, Menu, Divider, Button, Layout} from 'antd';
 import { useNavigate } from "react-router-dom";
 import conf from '../config/conf';
 import AddItem from '../components/AddList';
@@ -9,8 +9,9 @@ import MoneyCard from '../components/MoneyCard';
 import FinanceList from '../components/FinanceList';
 import useSessionState from "../config/jwtstorage";
 import YourMoney from '../components/YourMoney';
+import AppHeader from '../components/AppHeader'; 
 import '../App.css'
-
+const { Content, Footer } = Layout;
 
 export default function TrackerScreen() {
     const [transactionData, setTransactionData] = useState([])
@@ -49,7 +50,7 @@ export default function TrackerScreen() {
             const totalIncome = sumTransactionsByType(data, "Income");
             const totalExpense = sumTransactionsByType(data, "Expense");
             setTotalIncome(totalIncome);
-            setTotalExpense(totalExpense);       
+            setTotalExpense(totalExpense);
 
             const amount = data.reduce((sum, d) => {
                 if (d.Type === "Income") {
@@ -139,15 +140,22 @@ export default function TrackerScreen() {
 
 
     return (
+        <Layout className="layout">
+            <AppHeader handleLogout={handleLogout} /> {/* เรียกใช้งาน AppHeader */}
+            <Content style={{ padding: '0 50px' }}>
+        
         <div className='App'>
             <div className='Tracker'>
                 <MoneyCard currentAmount={currentAmount} username={fullname} />
             </div>
-            <header className="Detail">
-                <YourMoney
-                    totalIncome={totalIncome}
-                    totalExpense={totalExpense}
-                />
+            <div className='Stat'>
+                    <YourMoney
+                        totalIncome={totalIncome}
+                        totalExpense={totalExpense}
+                    />
+                </div>
+
+            <div className="Detail">
                 <Divider>บันทึกรายรับ-รายจ่าย</Divider>
                 <Dropdown overlay={menu} trigger={['click']}>
                     <Button>
@@ -161,8 +169,9 @@ export default function TrackerScreen() {
                     filter={filter}
                 />
                 <Button onClick={() => handleLogout()}>Log Out</Button>
-            </header>
-
+            </div>
         </div>
+        </Content>
+        </Layout>
     );
 }

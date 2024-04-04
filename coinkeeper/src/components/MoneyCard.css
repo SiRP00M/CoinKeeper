@@ -1,5 +1,6 @@
 
 @import url('https://fonts.cdnfonts.com/css/public-pixel');
+@import url('https://fonts.cdnfonts.com/css/lilliput-steps');
 
 *{
     margin: 0;
@@ -45,16 +46,17 @@
     align-items: center;
 
 }
-h6{
-    margin-top: 10px;
-    margin-left: 3px;
-    font-size: 15px;
-}
-
 
 h5 {
     font-size: 15px;
     font-weight: 400;
+}
+
+
+h6{
+    margin-top: 10px;
+    margin-left: 3px;
+    font-size: 15px;
 }
 
 .card-detail {
@@ -72,3 +74,38 @@ h5 {
     
    
 }
+.Total-Box{
+    padding-left: 1px ;
+    padding-top: 10px;
+    background: rgb(213, 213, 213);
+    width: 225px;
+    height: 100px;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.926);
+    backdrop-filter: blur(100px); 
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: 0 10px; 
+   
+}
+.Total-Box .Income{
+    color: green;
+    padding-top: 30px;
+    font-size: 15px;
+    font-family: 'Public Pixel', sans-serif;
+}
+.Total-Box .Expense{
+    color: red;
+    padding-top: 30px;
+    font-size: 15px;
+    font-family: 'Public Pixel', sans-serif;
+}
+.Total-Box .Box-Detail{
+    font-size: 15px;
+    font-family: 'Lilliput Steps', sans-serif;
+    
+}
+.YourMoney {
+    display: flex;
+    padding: 0 20px; 
+}
+

@@ -1,35 +1,22 @@
-import { Card, Col, Row, Statistic } from 'antd';
+import { Statistic } from 'antd';
+import './MoneyCard.css'
 
-export default function YourMoney({totalIncome, totalExpense }) {
-    
+export default function YourMoney({ totalIncome, totalExpense }) {
+
     return (
         <>
-            <Row gutter={16}>
-                <Col span={12}>
-                    <Card bordered={false}>
-                        <Statistic
-                            title="Total Income"
-                            value={totalIncome}
-                            precision={2}
-                            valueStyle={{
-                                color: '#3f8600',
-                            }}
-                        />
-                    </Card>
-                </Col>
-                <Col span={12}>
-                    <Card bordered={false}>
-                        <Statistic
-                            title="Total Expense"
-                            value={totalExpense}
-                            precision={2}
-                            valueStyle={{
-                                color: '#cf1322',
-                            }}
-                        />
-                    </Card>
-                </Col>
-            </Row>
+            <div className='YourMoney'>
+                <div className='Total-Box'>
+                    <pre className='Box-Detail' >Total Income</pre >
+                    <p className='Income'>{totalIncome.toFixed(2)}</p>
+                </div>
+
+                <div className='Total-Box'>
+                    <pre className='Box-Detail'>Total Expense</pre >
+                    <p className='Expense'>{totalExpense.toFixed(2)}</p>
+                </div>
+            </div>
+
         </>
-    )
+    );
 }
