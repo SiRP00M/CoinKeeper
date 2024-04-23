@@ -5,11 +5,17 @@ import reportWebVitals from './reportWebVitals';
 import TrackerScreen from './pages/TrackerScreen';
 import LoginScreen from './pages/LoginScreen';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import RegisterScreen from './pages/RegisterScreen';
 
 const router = createBrowserRouter([
   {
     path: "/Login",
     element: <LoginScreen />,
+  },
+
+  {
+    path: "/Register",
+    element: <RegisterScreen />,
   },
   {
     path: "/TrackerScreen",
