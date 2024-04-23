@@ -6,13 +6,17 @@ import TrackerScreen from './pages/TrackerScreen';
 import LoginScreen from './pages/LoginScreen';
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RegisterScreen from './pages/RegisterScreen';
+import HomeScreen from './pages/HomeScreen';
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <HomeScreen />,
+  },
   {
     path: "/Login",
     element: <LoginScreen />,
   },
-
   {
     path: "/Register",
     element: <RegisterScreen />,

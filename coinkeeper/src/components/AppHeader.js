@@ -1,9 +1,10 @@
 import React from 'react';
 import { Layout } from 'antd';
+import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
-const AppHeader = ({ handleLogout }) => {
+const AppHeader = ({ handleLogout, jwt,navigate }) => {
     return (
         <Header>
             <div className="HeaderApp">
@@ -11,7 +12,11 @@ const AppHeader = ({ handleLogout }) => {
                     <span className="menu-item">หน้าหลัก</span>
                 </div>
                 <div className="right-menu">
-                    <span className="menu-item" onClick={handleLogout}>ออกจากระบบ</span>
+                    {jwt && (
+                        <span onClick={handleLogout}>ออกจากระบบ</span>
+                    )}
+                     <Link to="/login" className="menu-item">เข้าสู่ระบบ</Link>
+                     <Link to="/register" className="menu-item">ลงทะเบียน</Link>
                 </div>
             </div>
         </Header>

@@ -1,5 +1,4 @@
 
-
 .App {
   background: #F9F6EE;
   min-height: 100vh; 
@@ -48,10 +47,16 @@
 .left-menu, .right-menu {
   display: flex;
   margin-right: 10px;
+  
 }
 
 .right-menu {
   margin-left: auto; 
+}
+
+.menu-item {
+  margin-left: 10px; 
+  color: #F9F6EE;
 }
 
 .FooterApp {
@@ -68,3 +73,4 @@
   align-items: center;
 
 }
+
