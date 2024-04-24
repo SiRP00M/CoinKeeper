@@ -1,5 +1,6 @@
 import React from 'react';
 import AppHeader from '../components/AppHeader';
+import "../App.css"
 
 export default function HomeScreen() {
   return (

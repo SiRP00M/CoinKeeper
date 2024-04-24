@@ -4,19 +4,25 @@ import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
-const AppHeader = ({ handleLogout, jwt,navigate }) => {
+const AppHeader = ({ handleLogout, jwt }) => {
     return (
         <Header>
             <div className="HeaderApp">
                 <div className="left-menu">
-                    <span className="menu-item">หน้าหลัก</span>
+                <span className='logo'>
+                    <img src='https://static.vecteezy.com/system/resources/previews/027/517/677/original/pixel-art-red-chinese-gold-coin-png.png' alt="logo" />
+                </span>
+                    <span className="menu-item">Coinkeeper</span>
                 </div>
                 <div className="right-menu">
-                    {jwt && (
+                    {jwt ? (
                         <span onClick={handleLogout}>ออกจากระบบ</span>
+                    ) : (
+                        <>
+                            <Link to="/Login" className="menu-item">Login</Link>
+                            <Link to="/Register" className="menu-item">Register</Link>
+                        </>
                     )}
-                     <Link to="/login" className="menu-item">เข้าสู่ระบบ</Link>
-                     <Link to="/register" className="menu-item">ลงทะเบียน</Link>
                 </div>
             </div>
         </Header>

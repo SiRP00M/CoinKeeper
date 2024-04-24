@@ -1,3 +1,5 @@
+@import url('https://fonts.cdnfonts.com/css/public-pixel');
+@import url('https://fonts.cdnfonts.com/css/lilliput-steps');
 
 .App {
   background: #F9F6EE;
@@ -39,15 +41,20 @@
 
 .HeaderApp {
   display: flex;
-  justify-content: space-between;
   color: #F9F6EE;
-  
+  display: flex;
+ 
 }
+
 
 .left-menu, .right-menu {
   display: flex;
-  margin-right: 10px;
-  
+ 
+}
+
+.left-menu{
+  font-family: 'Public Pixel', sans-serif;
+
 }
 
 .right-menu {
@@ -72,5 +79,10 @@
   display: flex;
   align-items: center;
 
+}
+.HeaderApp .logo img {
+  width: 38px;
+  padding-top: 10px;
+  
 }
 

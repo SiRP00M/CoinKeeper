@@ -7,7 +7,7 @@ import conf from '../config/conf';
 
 export default function LoginScreen(props) {
   const [jwt, setjwt] = useSessionState(null, "jwt");
-  
+
   const [submitEnabled, setSubmitEnabled] = useState(true);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -33,19 +33,11 @@ export default function LoginScreen(props) {
       axios.defaults.headers.common = {
         Authorization: `Bearer ${loginResult.data.jwt}`,
       };
-      const userResult = await axios.get(
-        `${conf.apiUrl}/users/me?populate=role`
-      );
-
-      if (userResult.data.role && userResult.data.role.name === "Member") {
-        navigate("/TrackerScreen");
-      } else {
-        navigate("/Login");
-      }
     } catch (error) {
       console.error(error);
       setErrorMessage("Wrong username or password");
       setShowErrorModal(true);
+      setjwt(null)
     } finally {
       setSubmitEnabled(true);
     }
@@ -56,10 +48,34 @@ export default function LoginScreen(props) {
   };
 
   useEffect(() => {
-    if (jwt) {
-        navigate("/TrackerScreen");
-    }
-}, [jwt, navigate]);
+    const checkUserRole = async () => {
+      if (jwt) {
+        try {
+          axios.defaults.headers.common = {
+            Authorization: `Bearer ${jwt}`,
+          };
+          const userResult = await axios.get(
+            `${conf.apiUrl}/users/me?populate=role`
+          );
+          if (userResult.data.role && userResult.data.role.name === "Member") {
+            navigate("/TrackerScreen");
+          } else {
+            setErrorMessage("You are not authorized to access this page.");
+            setShowErrorModal(true);
+            setjwt(null)
+          }
+        } catch (error) {
+          console.error(error);
+          setErrorMessage("An error occurred while checking user role.");
+          setShowErrorModal(true);
+          setjwt(null)
+        }
+      }
+    };
+
+    checkUserRole();
+  }, [jwt, navigate]);
+
 
   return (
     <div style={{}}>

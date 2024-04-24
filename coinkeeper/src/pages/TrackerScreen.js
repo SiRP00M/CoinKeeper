@@ -141,7 +141,7 @@ export default function TrackerScreen() {
 
     return (
         <Layout className="layout">
-            <AppHeader handleLogout={handleLogout} /> 
+            <AppHeader handleLogout={handleLogout} jwt={jwt} />
             <Content style={{ padding: '0 50px' }}>
 
                 <div className='App'>
